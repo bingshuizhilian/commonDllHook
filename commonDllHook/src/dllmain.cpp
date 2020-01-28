@@ -11,7 +11,8 @@ BOOL APIENTRY DllMain(HMODULE hModule,
 	HMODULE hm = hModule;
 	//33 C0                xor eax,eax ; 90    nop
 	BYTE code[] = { 0x33, 0xc0, 0x90 };
-	DWORD offset = 0x263061; // 0xC00 + 0x262461;
+	//DWORD offset = 0x263061; // 0xC00 + 0x262461;
+	DWORD offset = 0x28B171; // 0xC00 + 0x28A571;  wx ver: 2.8.0.111
 
 	switch (ul_reason_for_call)
 	{
