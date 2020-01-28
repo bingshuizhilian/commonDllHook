@@ -78,36 +78,6 @@ PEB_LDR_DATA* NtGetPebLdr(void* peb)
 }
 
 /*
-fakedll:	被劫持dll的原始名字
-realdll:	被劫持dll改名后的名字
-*/
-void callhook(HMODULE hMod, LPCWSTR fakedll, LPWSTR realdll)
-{
-	TCHAR tszDllPath[MAX_PATH] = { 0 };
-
-	GetModuleFileName(hMod, tszDllPath, MAX_PATH);
-	PathRemoveFileSpec(tszDllPath);
-	PathAppend(tszDllPath, realdll);
-
-	commonDllHook(fakedll, tszDllPath);
-}
-
-void Patch(PVOID addr, PVOID code, DWORD size)
-{
-	DWORD lpOldPro = 0;
-	if (!VirtualProtect((LPVOID)addr, size, PAGE_EXECUTE_READWRITE, &lpOldPro))
-	{
-		std::cout << "Patch error" << std::endl;
-		return;
-	}
-	memcpy((char*)addr, (char*)code, size);
-
-	if (!VirtualProtect((LPVOID)addr, size, lpOldPro, &lpOldPro))
-	{
-	}
-}
-
-/*
 dllname:		被劫持dll的原始名字
 OrigDllPath:	被劫持dll改名后的完整路径
 */
@@ -139,5 +109,41 @@ void commonDllHook(LPCWSTR dllname, LPWSTR OrigDllPath)
 			data->DllBase = hm;
 			break;
 		}
+	}
+}
+
+/*
+fakedll:	被劫持dll的原始名字
+realdll:	被劫持dll改名后的名字
+*/
+void callhook(HMODULE hMod, LPCWSTR fakedll, LPWSTR realdll)
+{
+	TCHAR tszDllPath[MAX_PATH] = { 0 };
+
+	GetModuleFileName(hMod, tszDllPath, MAX_PATH);
+	PathRemoveFileSpec(tszDllPath);
+	PathAppend(tszDllPath, realdll);
+
+	commonDllHook(fakedll, tszDllPath);
+}
+
+/*
+addr:	dest
+code:	src
+size:	size
+*/
+void Patch(PVOID addr, PVOID code, DWORD size)
+{
+	DWORD lpOldPro = 0;
+	if (!VirtualProtect((LPVOID)addr, size, PAGE_EXECUTE_READWRITE, &lpOldPro))
+	{
+		std::cout << "Patch error" << std::endl;
+		return;
+	}
+
+	memcpy((char*)addr, (char*)code, size);
+
+	if (!VirtualProtect((LPVOID)addr, size, lpOldPro, &lpOldPro))
+	{
 	}
 }

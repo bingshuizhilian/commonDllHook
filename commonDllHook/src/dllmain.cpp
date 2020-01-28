@@ -19,13 +19,13 @@ BOOL APIENTRY DllMain(HMODULE hModule,
 	case DLL_PROCESS_ATTACH:
 		std::cout << "hModule fake: " << hModule << std::endl;
 
-		callhook(hModule, L"WeChatWin.dll", L"WeChatWin.dll.orig");
+		callhook(hModule, FAKE_DLL_NAME, ORIGINAL_DLL_NAME);
 
-		hm = GetModuleHandle(L"WeChatWin.dll.orig");
+		hm = GetModuleHandle(ORIGINAL_DLL_NAME);
 
-		std::cout << "hModule WeChatWin.dll: " << GetModuleHandle(L"WeChatWin.dll") << std::endl;
+		std::cout << "hModule WeChatWin.dll: " << GetModuleHandle(FAKE_DLL_NAME) << std::endl;
 
-		std::cout << "hModule WeChatWin.dll.orig: " << GetModuleHandle(L"WeChatWin.dll.orig") << std::endl;
+		std::cout << "hModule WeChatWin.dll.orig: " << GetModuleHandle(ORIGINAL_DLL_NAME) << std::endl;
 
 		std::wcout << std::hex << *((BYTE*)hm + offset) << " - " << *((BYTE*)hm + offset + 1) << " - " << *((BYTE*)hm + offset + 2) << std::endl;
 
